@@ -5,7 +5,10 @@
 </head>
 
 <body>
-Insert your email <input type="text" id="email" placeholder="email@gmail.com"></input><br/><br/>
-Insert your domain <input type="text" id="domain" placeholder="https://example.com"></input>
+    <form method="POST" action="server-check.php">
+Insert your email <input type="text" name="email" placeholder="email@gmail.com"/><br/>
+Insert your domain <input type="text" name="domain" placeholder="https://example.com"/><br/><br/>
+<input type="submit" name="submit" value="Start Checking Server Status"/>
+</form>
 </body>
 </html>
