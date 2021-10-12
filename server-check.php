@@ -29,7 +29,7 @@ function writeToFile(string $fileName, string $emails, string $domains)
     $file = fopen($fileName, "a");
     isItHttps($domains);
     $emailsPlusDomains = $emails . ' ' . $domains;
-    fwrite($file, $emailsPlusDomains . '\n');
+    fwrite($file, $emailsPlusDomains . "\n");
 }
 /**
  * when user submits info calls the writeToFile function
