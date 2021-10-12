@@ -20,11 +20,8 @@ function writeToFile($fileName)
  */
 if(isset($_POST['sbt']))
 {
-    $emails = $_POST['email'];
-    $domains = $_POST['domain'];
-    $fileWithDomens = fopen("emails-and-domens.txt","w") or die("unable to open file.");
-    $emailsPlusDomains = $emails.' '.$domains;
-    fwrite($fileWithDomens, $emailsPlusDomains);
+    $file = "emails-and-domains.txt";
+    writeToFile($file);
 }
 
-    ?>
+?>
