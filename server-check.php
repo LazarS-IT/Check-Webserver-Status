@@ -5,23 +5,21 @@
  * of the user which will be later used to monitor website
  * and send notification to the user's email
  */
-function writeToFile($fileName)
+function writeToFile(string $fileName, string $emails, string $domains)
 {
-    $emails = $_POST['email'];
-    $domains = $_POST['domain'];
-    if(!file_exists($fileName))
+    if (!file_exists($fileName))
         fopen($fileName, "w");
-    $emailsPlusDomains = $emails.' '.$domains;
-    fwrite($fileName,$emailsPlusDomains);
+    $file = fopen($fileName, "a");
+    $emailsPlusDomains = $emails . ' ' . $domains;
+    fwrite($file, $emailsPlusDomains);
 }
 /**
  * when user submits info calls the writeToFile function
  * that writes email of an user and domain to txt file
  */
-if(isset($_POST['sbt']))
-{
+if (isset($_POST['sbt'])) {
+    $emails = $_POST['email'];
+    $domains = $_POST['domain'];
     $file = "emails-and-domains.txt";
-    writeToFile($file);
+    writeToFile($file, $emails, $domains);
 }
-
-?>
