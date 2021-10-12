@@ -9,15 +9,17 @@ use JetBrains\PhpStorm\Internal\ReturnTypeContract;
  */
 function isItHttps($domains)
 {
+    $j = 0;
     $httpsString = "https://";
     if(strlen($domains) > 8)
     {
         for($i = 0; $i <8; $i++)
         {
             $domains[$i] == $httpsString[$i];
+            $j++;
         }
     }
-    if($i == 8)
+    if($j == 8)
         return $domains;
     else return $httpsString.=$domains;
 }
