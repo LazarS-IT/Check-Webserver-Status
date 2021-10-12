@@ -10,15 +10,7 @@ if(isset($_POST['sbt']))
     $domains = $_POST['domain'];
     $fileWithDomens = fopen("emails-and-domens.txt","w") or die("unable to open file.");
     $emailsPlusDomains = $emails.' '.$domains;
-    fwrite($fileWithDomens, $emails);
+    fwrite($fileWithDomens, $emailsPlusDomains);
 }
-    ?>
 
-<html>
-    <body>
-        <?php
-       $em = $_POST['email'];
-        echo $em;
-        ?>
-    </body>
-</html>
+    ?>
