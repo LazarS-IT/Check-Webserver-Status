@@ -1,7 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\Internal\ReturnTypeContract;
-
 /**
  * creating function that will write email and domain
  * of the user which will be later used to monitor website
@@ -11,17 +9,19 @@ function isItHttps($domains)
 {
     $j = 0;
     $httpsString = "https://";
-    if(strlen($domains) > 8)
+    if ($domains)
+        for ($i = 0; $i < 8; $i++)
+            if ($domains[$i] == $httpsString[$i])
+                $j++;
+            else break;
+    echo $j;
+    if ($j == 8)
+            return $domains;
+    else
     {
-        for($i = 0; $i <8; $i++)
-        {
-            $domains[$i] == $httpsString[$i];
-            $j++;
-        }
+        $httpsString .= $domains;
+        return $httpsString;
     }
-    if($j == 8)
-        return $domains;
-    else return $httpsString.=$domains;
 }
 
 function writeToFile(string $fileName, string $emails, string $domains)
@@ -29,7 +29,7 @@ function writeToFile(string $fileName, string $emails, string $domains)
     if (!file_exists($fileName))
         fopen($fileName, "w");
     $file = fopen($fileName, "a");
-    isItHttps($domains);
+    $domains = isItHttps($domains);
     $emailsPlusDomains = $emails . ' ' . $domains;
     fwrite($file, $emailsPlusDomains . "\n");
 }
