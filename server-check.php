@@ -14,7 +14,6 @@ function isItHttps($domains)
             if ($domains[$i] == $httpsString[$i])
                 $j++;
             else break;
-    echo $j;
     if ($j == 8)
             return $domains;
     else
