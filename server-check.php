@@ -30,7 +30,15 @@ function writeToFile(string $fileName, string $emails, string $domains)
     $file = fopen($fileName, "a");
     $domains = isItHttps($domains);
     $emailsPlusDomains = $emails . ' ' . $domains;
-    fwrite($file, $emailsPlusDomains . "\n");
+    fwrite($file, $emailsPlusDomains . "\r\n");
+}
+function writeToFileOnlyDomains(string $fileName, string $domains)
+{
+    if (!file_exists($fileName))
+        fopen($fileName, "w");
+    $file = fopen($fileName, "a");
+    $domains = isItHttps($domains);
+    fwrite($file, $domains . "\r\n");
 }
 /**
  * when user submits info calls the writeToFile function
@@ -39,6 +47,9 @@ function writeToFile(string $fileName, string $emails, string $domains)
 if (isset($_POST['sbt'])) {
     $emails = $_POST['email'];
     $domains = $_POST['domain'];
-    $file = "emails-and-domains.txt";
-    writeToFile($file, $emails, $domains);
+    $file1 = "domains.txt";
+    $file2 = "emails-and-domains.txt";
+    writeToFile($file2, $emails, $domains);
+    writeToFileOnlyDomains($file1,$domains);
+
 }
