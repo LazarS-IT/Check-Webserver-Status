@@ -51,5 +51,4 @@ if (isset($_POST['sbt'])) {
     $file2 = "emails-and-domains.txt";
     writeToFile($file2, $emails, $domains);
     writeToFileOnlyDomains($file1,$domains);
-
 }
