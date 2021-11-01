@@ -86,3 +86,23 @@ function getResponse($url, $webservers)
     return Null; // ret was empty so return nothing
 }
 
+// main script init
+$domainFile = "domains.txt";
+$domainsOnly = file($domainFile, FILE_IGNORE_NEW_LINES);
+foreach ($domainsOnly as $domain) {
+    $status = getResponse($domain, $webservers); // get the status of domain
+    if (empty($status)) {
+        // nothing happens here beacuse function returned nothing
+    } else {
+        if (strstr($status, "200")) // search for the error code that means everything is ok
+        {
+            //if found dont do anything, go to the next one
+        } else {
+            $timeStamp = date("m/d/Y H:i:s a", time()); // get the time error occured
+            $error = $domain . " - " . $status . " status error detected"; // set error msg with domain and resposne code
+            $message = "At - " . $timeStamp . " - a http response error was detected on" . $domain
+                . "\r\nInstaed of a 200 OK response, the server returned " . $status;
+            sendEmail($error, $message, $webservers);
+        }
+    }
+}
