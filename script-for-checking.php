@@ -19,7 +19,7 @@ function sendEmail($subject, string $message, $webservers)
     $i = 0;
     $j = 0;
     $limit = sizeof($webservers);
-    while ($limit < 3) {
+    while ($i < $limit) {
         $wrapMessage = wordwrap($message, 70, "\n", true); // can't support more than 70 chars
         $to = explode(" ", $webservers[$i]);
         $headers = 'From: support@gowpcare.com' . "\r\n" .
