@@ -46,7 +46,7 @@ function getResponse($url, $webservers)
     }
 
     //setting cURL options
-    $ret = curl_setopt($ch, CURLOPT_URL, "https://" . $url . "/");
+    $ret = curl_setopt($ch, CURLOPT_URL, $url . "/");
     $ret = curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
     $ret = curl_setopt($ch, CURLOPT_HEADER, true);
     $ret = curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -75,7 +75,8 @@ function getResponse($url, $webservers)
             sendEmail($subject, $message, $webservers);
         } else {
             //load the HTTP code descriptions
-            $http_codes = parse_ini_file("/server/path/to/http-response-code.ini"); //Change the path
+            $dir = dirname(__FILE__);
+            $http_codes = parse_ini_file("$dir/http-response-code.ini"); //Change the path
 
             // result - code number and description
             $result = $info['http_code'] . " " . $http_codes[$info['http_code']];
