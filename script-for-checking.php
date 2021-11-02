@@ -17,10 +17,10 @@ $webservers = file($fileName, FILE_IGNORE_NEW_LINES); // convert file to array o
 function sendEmail($subject, string $message, $webservers)
 {
     $i = 0;
-    $j = 0;
+    $j = 1;
     $limit = sizeof($webservers);
     while ($i < $limit) {
-        $wrapMessage = wordwrap($message, 70, "\n", true); // can't support more than 70 chars
+        $wrapMessage = wordwrap($message, 70, "\n", true); // php mail function can't support more than 70 chars
         $to = explode(" ", $webservers[$i]);
         $headers = 'From: support@gowpcare.com' . "\r\n" .
             'Reply-To: support@gowpcare.com' . "\r\n" .
