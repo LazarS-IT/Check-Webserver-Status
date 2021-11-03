@@ -5,7 +5,7 @@
 use Consolidation\AnnotatedCommand\Cache\NullCache;
 
 ini_set('sendmail_from', 'support@gowpcare.com');
-ini_set('SMTP', '127.0.0.1');
+ini_set('SMTP', '136.243.170.184');
 ini_set('smtp_port', '465');
 
 ini_set('allow_url_fopen', true); //enable fopen
@@ -76,7 +76,7 @@ function getResponse($url, $webservers)
         } else {
             //load the HTTP code descriptions
             $dir = dirname(__FILE__);
-            $http_codes = parse_ini_file("$dir/http-response-code.ini"); //Change the path
+            $http_codes = parse_ini_file("$dir/http-response-codes.ini"); //path to codes
 
             // result - code number and description
             $result = $info['http_code'] . " " . $http_codes[$info['http_code']];
