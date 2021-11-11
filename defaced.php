@@ -1,4 +1,5 @@
 <?php
+
 /**
  * script for checking if website was defaced (if index.php file was changed in some way)
  * 
@@ -14,22 +15,29 @@
  */
 
 $fileName = "domains.txt";
-$domains = file($fileName,FILE_IGNORE_NEW_LINES);
+$domains = file($fileName, FILE_IGNORE_NEW_LINES);
 
 function getDomainName($domains, $i)
 {
-    $plainName = explode("//",$domains[$i]);
+    $plainName = explode("//", $domains[$i]);
     return $plainName[1];
 }
-/*
+
 function checkIfDefaced($domains, int $i)
 {
     $dir = dirname(__FILE__);
-    if($dir."/")
-    shell_exec("wget $domains[$i]");
-    $ch = curl_init();
-    curl_close($ch);
+    $folderName = getDomainName($domains, $i);
+    if (date("D") === "Sun") {
+        if (!$dir . "/" . $folderName) {
+            shell_exec("mkdir $folderName && cd $folderName");
+            shell_exec("wget -O original-index.html $domains[$i]");
+            shell_exec("cd ..");
+        }
+    } else {
+        if (!$dir . "/" . $folderName)
+            shell_exec("cd $folderName && wget -O infex-compare.html");
+    }
 }
-*/
 
+$i = 0;
 getDomainName($domains, 0);
