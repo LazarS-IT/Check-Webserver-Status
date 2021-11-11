@@ -28,18 +28,52 @@ function checkIfDefaced($domains, int $i)
     $dir = dirname(__FILE__);
     $folderName = getDomainName($domains, $i);
     if (date('w') === "7") {
-        if (!$dir . "/" . $folderName) { // check if there already exists folder by name (example.com)
+        if (!file_exists($dir . "/" . $folderName)) { // check if there already exists folder by name (example.com)
             shell_exec("mkdir $folderName && cd $folderName"); // if there isn't folder make it and cd into it
+            echo "\r\n HELO DOS DIS WORK?" . $domains[$i] . "\r\n";
             shell_exec("wget -O original-index.html $domains[$i]");
+           // $original = filesize("$folderName/original-index.html");
+            shell_exec("cd ..");
+        }
+        else {
+            echo "\r\n HELO DOS DIS WORK?" . $domains[$i] . "\r\n";
+            shell_exec("cd $folderName && wget -O original-index.html $domains[$i]");
+           // $original = filesize("$folderName/original-index.html");
             shell_exec("cd ..");
         }
     } else {
-        if (!$dir . "/" . $folderName) {
+        if (!file_exists($dir . "/" . $folderName)) {
+            echo "\r\n HELO DOS DIS WORK?" . $domains[$i] . "\r\n";
             shell_exec("mkdir $folderName && cd $folderName");
-            shell_exec("wget -O infex-compare.html");
+            shell_exec("wget -O index-compare.html $domains[$i]");
+            //$compare = filesize("$folderName/index-compare.html");
+            shell_exec("cd ..");
         }
+        else {
+            echo "\r\n HELO DOS DIS WORK?" . $domains[$i] . "\r\n";
+            shell_exec("cd $folderName && wget -O index-compare.html $domains[$i]");
+            //$compare = filesize("$folderName/index-compare.html");
+            shell_exec("cd ..");
+        }
+    }
+
+    $original = filesize("$folderName/original-index.html");
+    $compare = filesize("$folderName/index-compare.html");
+    //compare original index.html with the current index.html and check if there has been changes
+    if($original === $compare)
+    {
+        //don't do anything if filesize didn't change
+        echo "\r\nthis is same shit\r\n";
+    }
+    else
+    {
+        echo "\r\nSOME SHIT HAS BEEN CHANGED\r\n";
     }
 }
 
 $i = 0;
-getDomainName($domains, 0);
+foreach($domains as $domain) // just go through domains and check them
+{
+    checkIfDefaced($domains, $i);
+    $i++;
+}
