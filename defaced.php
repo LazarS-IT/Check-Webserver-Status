@@ -27,15 +27,17 @@ function checkIfDefaced($domains, int $i)
 {
     $dir = dirname(__FILE__);
     $folderName = getDomainName($domains, $i);
-    if (date("D") === "Sun") {
-        if (!$dir . "/" . $folderName) {
-            shell_exec("mkdir $folderName && cd $folderName");
+    if (date('w') === "7") {
+        if (!$dir . "/" . $folderName) { // check if there already exists folder by name (example.com)
+            shell_exec("mkdir $folderName && cd $folderName"); // if there isn't folder make it and cd into it
             shell_exec("wget -O original-index.html $domains[$i]");
             shell_exec("cd ..");
         }
     } else {
-        if (!$dir . "/" . $folderName)
-            shell_exec("cd $folderName && wget -O infex-compare.html");
+        if (!$dir . "/" . $folderName) {
+            shell_exec("mkdir $folderName && cd $folderName");
+            shell_exec("wget -O infex-compare.html");
+        }
     }
 }
 
