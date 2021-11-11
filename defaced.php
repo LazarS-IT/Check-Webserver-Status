@@ -16,9 +16,20 @@
 $fileName = "domains.txt";
 $domains = file($fileName,FILE_IGNORE_NEW_LINES);
 
-function checkIfDefaced($domains, int $i, $themeName)
+function getDomainName($domains, $i)
 {
-    $absPath .= $domains[$i] . "/wp-content/themes/$themeName/index.php"; //absolute path of index.php file
+    $plainName = explode("//",$domains[$i]);
+    return $plainName[1];
+}
+/*
+function checkIfDefaced($domains, int $i)
+{
+    $dir = dirname(__FILE__);
+    if($dir."/")
+    shell_exec("wget $domains[$i]");
     $ch = curl_init();
     curl_close($ch);
 }
+*/
+
+getDomainName($domains, 0);
