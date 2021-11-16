@@ -14,8 +14,10 @@
  * might not work with just checking the size of index.php, will have to take a look at that
  */
 
-$fileName = "domains.txt";
+$fileName = "domains_for_defaced.txt";
+$fileNameEmails = "emails_for_defaced.txt";
 $domains = file($fileName, FILE_IGNORE_NEW_LINES);
+$emails = file($fileNameEmails, FILE_IGNORE_NEW_LINES);
 
 function getDomainName($domains, $i)
 {
@@ -23,7 +25,7 @@ function getDomainName($domains, $i)
     return $plainName[1];
 }
 
-function checkIfDefaced($domains, int $i)
+function checkIfDefaced($domains, int $i, $emails)
 {
     $dir = dirname(__FILE__);
     $folderName = getDomainName($domains, $i);
@@ -60,17 +62,26 @@ function checkIfDefaced($domains, int $i)
     if($original === $compare)
     {
         //don't do anything if filesize didn't change
-        echo "\r\nthis is same shit\r\n";
     }
     else
-    {
-        echo "\r\nSOME SHIT HAS BEEN CHANGED\r\n";
-    }
+        SendMail($emails,$i, getDomainName($domains, $i));   // if index.html has been changed then shoot up email to the client stating that something
+                                // has been changed
+}
+
+function SendMail($emails, int $i, $domain)
+{
+    $subject = $emails[$i];
+    $message = "Your site ($domain) has been defaced, please contact your support.";
+    $headers = 'From: alerts@gowpcare.com' . "\r\n" .
+    'Reply-To: alerts@gowpcare.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+    $wrapMessage = wordwrap($message, 70, "\n", true);
+    mail($subject,$wrapMessage,$headers);
 }
 
 $i = 0;
 foreach($domains as $domain) // just go through domains and check them
 {
-    checkIfDefaced($domains, $i);
+    checkIfDefaced($domains, $i, $emails);
     $i++;
 }
