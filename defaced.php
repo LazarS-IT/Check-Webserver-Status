@@ -14,6 +14,12 @@
  * might not work with just checking the size of index.php, will have to take a look at that
  */
 
+ini_set('sendmail_from', 'alerts@gowpcare.com');
+ini_set('SMTP', '136.243.170.184');
+ini_set('smtp_port', '465');
+
+ini_set('allow_url_fopen', true); //enable fopen
+
 $fileName = "domains_for_defaced.txt";
 $fileNameEmails = "emails_for_defaced.txt";
 $domains = file($fileName, FILE_IGNORE_NEW_LINES);
@@ -25,62 +31,63 @@ function getDomainName($domains, $i)
     return $plainName[1];
 }
 
+function createFolder($folderName, $dir)
+{
+    if (file_exists($dir . "/" . $folderName)) {
+        // do nothing because folder already exists
+    } else {
+        shell_exec("mkdir $folderName"); // if it doesn't exist create directory with the domain name
+    }
+}
+
 function checkIfDefaced($domains, int $i, $emails)
 {
     $dir = dirname(__FILE__);
     $folderName = getDomainName($domains, $i);
+    createFolder($folderName, $dir);
     if (date('w') === "7") {
-        if (!file_exists($dir . "/" . $folderName)) { // check if there already exists folder by name (example.com)
-            shell_exec("mkdir $folderName && cd $folderName"); // if there isn't folder make it and cd into it
-            shell_exec("wget -O original-index.html $domains[$i]");
-           // $original = filesize("$folderName/original-index.html");
-            shell_exec("cd ..");
+        shell_exec("cd $folderName && wget -O original-index.html $domains[$i]");
+        $original = filesize("$dir/$folderName/original-index.html");
+        // Note : add If that will ask if there is compare file if there isn't then create it.
+        if(file_exists("$dir/$folderName/index-compare.html"))
+        {
+            // if it exists do nothing
         }
-        else {
-            echo "\r\n HELO DOS DIS WORK?" . $domains[$i] . "\r\n";
-            shell_exec("cd $folderName && wget -O original-index.html $domains[$i]");
-           // $original = filesize("$folderName/original-index.html");
-            shell_exec("cd ..");
+        else 
+        {
+            shell_exec("cd $folderName && wget -O index-compare.html $domains[$i]");
+            $compare = filesize("$dir/$folderName/index-compare.html");
         }
     } else {
-        if (!file_exists($dir . "/" . $folderName)) {
-            shell_exec("mkdir $folderName && cd $folderName");
-            shell_exec("wget -O index-compare.html $domains[$i]");
-            //$compare = filesize("$folderName/index-compare.html");
-            shell_exec("cd ..");
-        }
-        else {
-            shell_exec("cd $folderName && wget -O index-compare.html $domains[$i]");
-            //$compare = filesize("$folderName/index-compare.html");
-            shell_exec("cd ..");
-        }
+        shell_exec("cd $folderName && wget -O index-compare.html $domains[$i]");
+        $original = filesize("$dir/$folderName/original-index.html");
+        $compare = filesize("$dir/$folderName/index-compare.html");
     }
 
-    $original = filesize("$folderName/original-index.html");
-    $compare = filesize("$folderName/index-compare.html");
     //compare original index.html with the current index.html and check if there has been changes
-    if($original === $compare)
-    {
+    if ($original === $compare) {
         //don't do anything if filesize didn't change
+    } else {
+    // echo $emails[$i] . " " . $i . " this is domain name :: ".getDomainName($domains, $i);
+       SendMail($emails[$i], getDomainName($domains, $i));  // if index.html has been changed then shoot up email to the client stating that something
+        // has been changed
     }
-    else
-        SendMail($emails,$i, getDomainName($domains, $i));   // if index.html has been changed then shoot up email to the client stating that something
-                                // has been changed
 }
 
-function SendMail($emails, int $i, $domain)
+function SendMail($email, $domain)
 {
-    $subject = $emails[$i];
+    $to = $email;
+    $subject = "Website Alert";
     $message = "Your site ($domain) has been defaced, please contact your support.";
     $headers = 'From: alerts@gowpcare.com' . "\r\n" .
-    'Reply-To: alerts@gowpcare.com' . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
+        'Reply-To: alerts@gowpcare.com' . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
     $wrapMessage = wordwrap($message, 70, "\n", true);
-    mail($subject,$wrapMessage,$headers);
+    return mail($to, $subject, $wrapMessage, $headers);
 }
 
 $i = 0;
-foreach($domains as $domain) // just go through domains and check them
+foreach ($domains as $domain) // just go through domains and check them
 {
     checkIfDefaced($domains, $i, $emails);
     $i++;
