@@ -15,9 +15,8 @@ function isItHttps($domains)
                 $j++;
             else break;
     if ($j == 8)
-            return $domains;
-    else
-    {
+        return $domains;
+    else {
         $httpsString .= $domains;
         return $httpsString;
     }
@@ -50,7 +49,7 @@ if (isset($_POST['sbt'])) {
     $file1 = "domains.txt";
     $file2 = "emails-and-domains.txt";
     writeToFile($file2, $emails, $domains);
-    writeToFileOnlyDomains($file1,$domains);
+    writeToFileOnlyDomains($file1, $domains);
     header("Location: https://gowpcare.com/");
     exit;
 }

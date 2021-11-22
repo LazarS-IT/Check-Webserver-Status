@@ -49,12 +49,9 @@ function checkIfDefaced($domains, int $i, $emails)
         shell_exec("cd $folderName && wget -O original-index.html $domains[$i]");
         $original = filesize("$dir/$folderName/original-index.html");
         // Note : add If that will ask if there is compare file if there isn't then create it.
-        if(file_exists("$dir/$folderName/index-compare.html"))
-        {
+        if (file_exists("$dir/$folderName/index-compare.html")) {
             // if it exists do nothing
-        }
-        else 
-        {
+        } else {
             shell_exec("cd $folderName && wget -O index-compare.html $domains[$i]");
             $compare = filesize("$dir/$folderName/index-compare.html");
         }
@@ -68,8 +65,8 @@ function checkIfDefaced($domains, int $i, $emails)
     if ($original === $compare) {
         //don't do anything if filesize didn't change
     } else {
-    // echo $emails[$i] . " " . $i . " this is domain name :: ".getDomainName($domains, $i);
-       SendMail($emails[$i], getDomainName($domains, $i));  // if index.html has been changed then shoot up email to the client stating that something
+        // echo $emails[$i] . " " . $i . " this is domain name :: ".getDomainName($domains, $i);
+        SendMail($emails[$i], getDomainName($domains, $i));  // if index.html has been changed then shoot up email to the client stating that something
         // has been changed
     }
 }

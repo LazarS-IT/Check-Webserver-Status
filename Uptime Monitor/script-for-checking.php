@@ -14,7 +14,7 @@ $fileName = "emails-and-domains.txt";
 $webservers = file($fileName, FILE_IGNORE_NEW_LINES); // convert file to array of domains
 
 
-function sendEmail($subject, string $message, $webservers,$i)
+function sendEmail($subject, string $message, $webservers, $i)
 {
     $j = 0;
     $limit = sizeof($webservers);
@@ -28,7 +28,7 @@ function sendEmail($subject, string $message, $webservers,$i)
     }
 }
 
-function getResponse($url, $webservers,$i)
+function getResponse($url, $webservers, $i)
 {
     $ch = curl_init(); // create cURL handle (ch)
     if (!$ch) // sends an email if curl can't initialise
@@ -37,7 +37,7 @@ function getResponse($url, $webservers,$i)
         $message = "The server checking script issued and error when it tried to process" . $url .
             ". Curl did not initialise correctly and issued and error - " . curl_error(curl_init()) .
             "The script has died and not completed any more tasks.";
-        sendEmail($subject, $message, $webservers,$i);
+        sendEmail($subject, $message, $webservers, $i);
         die();
     }
 
@@ -59,7 +59,7 @@ function getResponse($url, $webservers,$i)
         $message = "The server checking script issued an error when it tried to process" . $url .
             ". Curl was trying to execute and issued the error - " . curl_error($ch) .
             "Further URLs will be tried.";
-        sendEmail($subject, $message, $webservers,$i);
+        sendEmail($subject, $message, $webservers, $i);
         curl_close($ch); //close cURL handler
     } else {
         $info = curl_getinfo($ch); //get header info - output is array
@@ -68,7 +68,7 @@ function getResponse($url, $webservers,$i)
         if (empty($info['http_code'])) {
             $subject = "Web Server Checking Script Error";
             $message = "The server checking script issued an error when it tried to process " . $url . "\r\nNo HTTP code was returned";
-            sendEmail($subject, $message, $webservers,$i);
+            sendEmail($subject, $message, $webservers, $i);
         } else {
             //load the HTTP code descriptions
             $dir = dirname(__FILE__);
@@ -88,7 +88,7 @@ $i = 0;
 $domainFile = "domains.txt";
 $domainsOnly = file($domainFile, FILE_IGNORE_NEW_LINES);
 foreach ($domainsOnly as $domain) {
-    $status = getResponse($domain, $webservers,$i); // get the status of domai
+    $status = getResponse($domain, $webservers, $i); // get the status of domai
     if (empty($status)) {
         // nothing happens here beacuse function returned nothing
     } else {
@@ -100,7 +100,7 @@ foreach ($domainsOnly as $domain) {
             $error = $domain . " - " . $status . " status error detected"; // set error msg with domain and resposne code
             $message = "At - " . $timeStamp . " - a http response error was detected on " . $domain
                 . "\r\nInstaed of a 200 OK response, the server returned " . $status;
-            sendEmail($error, $message, $webservers,$i);
+            sendEmail($error, $message, $webservers, $i);
         }
     }
     $i++;
